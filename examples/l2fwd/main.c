@@ -39,6 +39,8 @@
 #include <rte_mempool.h>
 #include <rte_mbuf.h>
 
+#include "sha256.h"
+
 static volatile bool force_quit;
 
 /* MAC updating enabled by default */
@@ -177,6 +179,9 @@ l2fwd_simple_forward(struct rte_mbuf *m, unsigned portid)
 		l2fwd_mac_updating(m, dst_port);
 
 	buffer = tx_buffer[dst_port];
+	if (dst_port == 1) {
+		sha256_test();
+	}
 	sent = rte_eth_tx_buffer(dst_port, 0, buffer, m);
 	if (sent)
 		port_statistics[dst_port].tx += sent;
